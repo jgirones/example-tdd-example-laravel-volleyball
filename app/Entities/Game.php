@@ -10,12 +10,16 @@ class Game
     public function __construct(private array $sets)
     {
         $setsCount = count($sets);
-        if ($setsCount < 3 || $setsCount > 5) {
-            throw new InvalidArgumentException('Count of `Sets` was wrong');
+        if ($setsCount < 3) {
+            throw new InvalidArgumentException('Count of `Sets` was wrong (' . $setsCount . ')', 449);
+        }
+
+        if ($setsCount > 5) {
+            throw new InvalidArgumentException('Count of `Sets` was wrong (' . $setsCount . ')', 550);
         }
 
         if ($this->getFirstTeamWins() === $this->getSecondTeamWins()) {
-            throw new InvalidArgumentException('First team and second team wins the same number of sets');
+            throw new InvalidArgumentException('First team and second team wins the same number of sets', 551);
         }
 
         $this->sets = collect($sets)->sort(function (GameSet $gameSetA, GameSet $gameSetB) {
@@ -27,31 +31,23 @@ class Game
 
         $repeatSets = collect($this->sets)->map(fn(GameSet $set) => $set->getNumber())->duplicates()->count();
         if ($repeatSets > 0) {
-            throw new InvalidArgumentException('`Sets` was repeat');
+            throw new InvalidArgumentException('`Sets` was repeat', 552);
         }
 
         if ($this->getFirstTeamWins(3) >= 3 && count($this->sets) > 3) {
-            throw new InvalidArgumentException(
-                '`Sets` score has unnecessary for first team and third game'
-            );
+            throw new InvalidArgumentException('`Sets` score has unnecessary for first team and third game', 553);
         }
 
-        if ($this->getFirstTeamWins(4) >= 4 && count($this->sets) > 4) {
-            throw new InvalidArgumentException(
-                '`Sets` score has unnecessary for first team and fourth game'
-            );
+        if ($this->getFirstTeamWins(4) === 3 && count($this->sets) > 4) {
+            throw new InvalidArgumentException('`Sets` score has unnecessary for first team and fifth game', 554);
         }
 
         if ($this->getSecondTeamWins(3) >= 3 && count($this->sets) > 3) {
-            throw new InvalidArgumentException(
-                '`Sets` score has unnecessary for second team and third game'
-            );
+            throw new InvalidArgumentException('`Sets` score has unnecessary for second team and third game', 555);
         }
 
-        if ($this->getSecondTeamWins(4) >= 4 && count($this->sets) > 4) {
-            throw new InvalidArgumentException(
-                '`Sets` score has unnecessary for second team and fourth game'
-            );
+        if ($this->getSecondTeamWins(4) === 3 && count($this->sets) > 4) {
+            throw new InvalidArgumentException('`Sets` score has unnecessary for second team and fifth game', 556);
         }
     }
 
